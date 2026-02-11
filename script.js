@@ -431,7 +431,8 @@ if (servicesTitle) {
             y: 20
         },
         {
-            letterSpacing: "40px",
+            letterSpacing: "24px",
+            autoRound: false, // Critical for smooth letter-spacing 
             opacity: 1,
             y: 0,
             ease: "none",
@@ -439,7 +440,7 @@ if (servicesTitle) {
                 trigger: ".services-header",
                 start: "top 85%",
                 end: "bottom center",
-                scrub: 1.5
+                scrub: 1 // Reduced scrub slightly for responsiveness, but smoothness comes from autoRound
             }
         }
     );

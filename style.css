@@ -22,6 +22,11 @@ body {
     font-family: var(--font-secondary);
     overflow-x: hidden;
     /* Hide scrollbar for x axis */
+    width: 100%;
+}
+
+html {
+    overflow-x: hidden;
 }
 
 /* WebGL Canvas */
@@ -1388,5 +1393,116 @@ footer::before {
 
     .separator {
         display: none;
+    }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        z-index: 200;
+        /* Above menu overlay */
+        position: relative;
+    }
+
+    .bar {
+        width: 30px;
+        height: 2px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    /* Hamburger Animation */
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.active .bar:nth-child(2) {
+        transform: translateY(0) rotate(-45deg);
+        /* The gap is 6px + 2px height = 8px offset needed, but let's test visual */
+        /* Actually simpler: absolute positioning when active is easier, or just transform */
+        transform-origin: center;
+        margin-top: -8px;
+        /* Counteract gap if needed, or use absolute */
+    }
+
+    /* Better hamburger animation approach */
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.active .bar:nth-child(2) {
+        transform: translateY(0) rotate(-45deg);
+        margin-top: -8px;
+        /* Visual adjustment based on gap */
+    }
+
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: #000;
+        z-index: 150;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        transform: translateY(-100%);
+        transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .mobile-menu.active {
+        transform: translateY(0);
+    }
+
+    .mobile-link {
+        font-family: var(--font-primary);
+        font-size: 2rem;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+    }
+
+    .mobile-menu.active .mobile-link {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.2s;
+    }
+
+    .mobile-menu.active .mobile-link:nth-child(2) {
+        transition-delay: 0.3s;
+    }
+
+    .mobile-menu.active .mobile-link:nth-child(3) {
+        transition-delay: 0.4s;
+    }
+
+    .mobile-menu.active .mobile-link:nth-child(4) {
+        transition-delay: 0.5s;
+    }
+}
+
+/* Ensure hamburger is hidden on desktop */
+.hamburger,
+.mobile-menu {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .hamburger {
+        display: flex;
+        /* Show only on mobile */
+    }
+
+    .mobile-menu {
+        display: flex;
+        /* Flex but hidden via transform */
     }
 }

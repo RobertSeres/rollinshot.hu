@@ -1272,17 +1272,21 @@ footer::before {
     }
 
     .hero-title {
-        font-size: 12vw;
+        font-size: 11vw;
+        /* Reduced from 12vw */
         line-height: 1;
         flex-direction: column;
         /* Allow line breaking if needed */
+        word-break: break-word;
+        /* Prevent overflow */
     }
 
     .sticky-title {
         font-size: 15vw;
         position: relative;
         top: 0;
-        margin-bottom: 2rem;
+        margin-bottom: 0.5rem;
+        /* Reduced from 2rem */
     }
 
     .contact-title {
@@ -1291,7 +1295,8 @@ footer::before {
     }
 
     .work-intro h2 {
-        font-size: 12vw;
+        font-size: 10vw;
+        /* Reduced from 12vw */
     }
 
     .services-header {
@@ -1301,6 +1306,11 @@ footer::before {
         padding-top: 0;
     }
 
+    .services-header .hero-title {
+        font-size: 13vw;
+        /* Smaller for "KEEP IT ROLLIN" */
+    }
+
     /* Nav */
     .nav-links {
         display: none;
@@ -1308,12 +1318,34 @@ footer::before {
 
     /* Layout Stacking */
     .about-layout,
-    .work-container,
-    .work-gallery,
     .contact-action,
     .services-grid {
         flex-direction: column;
         grid-template-columns: 1fr;
+    }
+
+    /* Fixed Portfolio Slider Styles */
+    .work-container {
+        width: 100%;
+        display: block;
+        padding-left: 0;
+    }
+
+    .work-gallery {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 1rem;
+        width: 100%;
+        gap: 1rem;
+        padding-right: 20px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .work-gallery::-webkit-scrollbar {
+        display: none;
     }
 
     .about-sidebar,
@@ -1321,7 +1353,8 @@ footer::before {
     .contact-header {
         width: 100%;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
+        /* Reduced from 2rem */
     }
 
     .about-content {
@@ -1336,10 +1369,15 @@ footer::before {
     }
 
     .work-card {
-        width: 100%;
+        flex: 0 0 85vw;
+        /* Strict flex basis */
+        width: 85vw;
         height: auto;
-        margin-bottom: 2rem;
+        margin-bottom: 0;
+        scroll-snap-align: center;
     }
+
+
 
     .work-card .card-image {
         height: 300px;

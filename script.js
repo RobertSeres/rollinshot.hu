@@ -575,6 +575,7 @@ serviceCards.forEach(card => {
 const hamburger = document.querySelector('.hamburger');
 const mobileMenu = document.querySelector('.mobile-menu');
 const mobileLinks = document.querySelectorAll('.mobile-link');
+const closeMenu = document.querySelector('.close-menu');
 
 if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', () => {
@@ -597,4 +598,13 @@ if (hamburger && mobileMenu) {
             document.body.style.overflow = '';
         });
     });
+
+    // Close menu when close button is clicked
+    if (closeMenu) {
+        closeMenu.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
 }

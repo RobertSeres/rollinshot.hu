@@ -1231,14 +1231,17 @@ footer::before {
 }
 
 /* Mobile Layout (Max Width 600px) */
-@media (max-width: 600px) {
+/* Mobile Layout (Max Width 900px) */
+@media (max-width: 900px) {
 
     /* Global Container Padding & Safety Margins */
     .hero,
     .about,
     .services,
     .work-section,
-    footer {
+    footer,
+    .container,
+    .work-container {
         padding-left: 20px !important;
         padding-right: 20px !important;
         width: 100%;
@@ -1261,8 +1264,7 @@ footer::before {
     .hero-title,
     .sticky-title,
     .contact-title,
-    .services-header .hero-title,
-    .work-intro h2 {
+    .services-header .hero-title {
         display: flex;
         justify-content: center;
         text-align: center;
@@ -1271,14 +1273,13 @@ footer::before {
         margin-right: auto;
     }
 
+    /* 1. FIX TITLE SIZING (Prevent Breaking) */
     .hero-title {
-        font-size: 11vw;
-        /* Reduced from 12vw */
+        font-size: 15vw;
+        /* User asked for .bg-text-decoration to be 15vw */
         line-height: 1;
         flex-direction: column;
-        /* Allow line breaking if needed */
         word-break: break-word;
-        /* Prevent overflow */
     }
 
     .sticky-title {
@@ -1286,17 +1287,12 @@ footer::before {
         position: relative;
         top: 0;
         margin-bottom: 0.5rem;
-        /* Reduced from 2rem */
     }
 
     .contact-title {
-        font-size: 14vw;
+        font-size: 13vw;
+        /* Requested 13vw */
         -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
-    }
-
-    .work-intro h2 {
-        font-size: 10vw;
-        /* Reduced from 12vw */
     }
 
     .services-header {
@@ -1307,8 +1303,10 @@ footer::before {
     }
 
     .services-header .hero-title {
-        font-size: 13vw;
-        /* Smaller for "KEEP IT ROLLIN" */
+        font-size: 11vw;
+        /* Requested 11vw */
+        white-space: nowrap;
+        /* Requested nowrap */
     }
 
     /* Nav */
@@ -1324,13 +1322,39 @@ footer::before {
         grid-template-columns: 1fr;
     }
 
-    /* Fixed Portfolio Slider Styles */
+    /* 2. PROJECT SECTION ALIGNMENT (Left Align) */
     .work-container {
         width: 100%;
         display: block;
         padding-left: 0;
     }
 
+    /* Target .work-intro and its children */
+    .work-intro {
+        width: 100%;
+        text-align: left !important;
+        /* Force left align */
+        align-items: flex-start !important;
+        margin-bottom: 20px;
+        /* Requested 20px gap */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .work-intro h2 {
+        font-size: 10vw;
+        text-align: left;
+        /* Ensure h2 is left aligned */
+        justify-content: flex-start;
+        /* Override centering flex */
+        width: 100%;
+    }
+
+    .work-intro p {
+        text-align: left;
+    }
+
+    /* Fixed Portfolio Slider Styles */
     .work-gallery {
         display: flex;
         flex-direction: row;
@@ -1348,13 +1372,31 @@ footer::before {
         display: none;
     }
 
-    .about-sidebar,
-    .work-intro,
+    .work-card {
+        flex: 0 0 85vw;
+        /* Strict flex basis */
+        width: 85vw;
+        height: auto;
+        margin-bottom: 0;
+        scroll-snap-align: center;
+    }
+
+    .work-card .card-image {
+        height: 300px;
+    }
+
+    /* 3. ABOUT SECTION SPACING (Smaller Gap) */
+    .about-sidebar {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+        /* Requested 10px gap */
+    }
+
     .contact-header {
         width: 100%;
         text-align: center;
         margin-bottom: 1rem;
-        /* Reduced from 2rem */
     }
 
     .about-content {
@@ -1365,23 +1407,8 @@ footer::before {
 
     .about-text-block {
         text-align: center;
-        /* Centering text as per general vibe */
     }
 
-    .work-card {
-        flex: 0 0 85vw;
-        /* Strict flex basis */
-        width: 85vw;
-        height: auto;
-        margin-bottom: 0;
-        scroll-snap-align: center;
-    }
-
-
-
-    .work-card .card-image {
-        height: 300px;
-    }
 
     /* Contact / Footer Specifics */
     .contact-action {
@@ -1402,7 +1429,6 @@ footer::before {
 
     .action-right {
         order: 3;
-        /* Ensure order if grid */
     }
 
     .cta-text-right {
@@ -1458,22 +1484,8 @@ footer::before {
 
     .hamburger.active .bar:nth-child(2) {
         transform: translateY(0) rotate(-45deg);
-        /* The gap is 6px + 2px height = 8px offset needed, but let's test visual */
-        /* Actually simpler: absolute positioning when active is easier, or just transform */
         transform-origin: center;
         margin-top: -8px;
-        /* Counteract gap if needed, or use absolute */
-    }
-
-    /* Better hamburger animation approach */
-    .hamburger.active .bar:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
-    }
-
-    .hamburger.active .bar:nth-child(2) {
-        transform: translateY(0) rotate(-45deg);
-        margin-top: -8px;
-        /* Visual adjustment based on gap */
     }
 
     .mobile-menu {
@@ -1495,6 +1507,24 @@ footer::before {
 
     .mobile-menu.active {
         transform: translateY(0);
+    }
+
+    /* Close Button */
+    .close-menu {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        font-family: var(--font-primary);
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+        z-index: 160;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }
+
+    .close-menu:hover {
+        opacity: 1;
     }
 
     .mobile-link {
@@ -1533,7 +1563,7 @@ footer::before {
     display: none;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     .hamburger {
         display: flex;
         /* Show only on mobile */

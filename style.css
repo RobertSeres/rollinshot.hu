@@ -1237,13 +1237,20 @@ footer::before {
     /* Global Container Padding & Safety Margins */
     .hero,
     .about,
-    .services,
     .work-section,
     footer,
     .container,
     .work-container {
         padding-left: 20px !important;
         padding-right: 20px !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .services {
+        padding-left: 0 !important;
+        /* Make cards wider (20px both sides gained) */
+        padding-right: 0 !important;
         width: 100%;
         box-sizing: border-box;
     }
@@ -1275,19 +1282,27 @@ footer::before {
 
     /* 1. FIX TITLE SIZING (Prevent Breaking) */
     .hero-title {
-        font-size: 15vw;
+        font-size: 13vw;
+        /* Adjusted for single line */
         line-height: 1;
-        flex-direction: column;
-        word-break: break-word;
+        flex-direction: row;
+        /* Prevent column stacking */
+        word-break: normal;
+        white-space: nowrap;
+        /* Never break */
     }
 
     .bg-text-decoration {
-        font-size: 12vw;
+        font-size: 13vw;
+        /* Reduced to fit 7 chars effectively */
         line-height: 0.9;
         width: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
+        left: 0;
+        transform: none;
+        text-align: center;
+        white-space: normal;
+        overflow: hidden;
+        padding: 0 10px;
     }
 
     .sticky-title {
@@ -1311,9 +1326,18 @@ footer::before {
     }
 
     .services-header .hero-title {
-        font-size: 8vw;
-        /* Reduced to 8vw to keep on one line */
+        font-size: 6vw;
+        /* Reduced to fit 14 chars in viewport */
         white-space: nowrap;
+        flex-direction: row;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .services-header .hero-title .line {
+        display: inline-block;
+        /* Ensure lines sit together if needed, though usually one per div */
     }
 
     /* Nav */
@@ -1340,12 +1364,13 @@ footer::before {
     .work-intro {
         width: 100%;
         text-align: left !important;
-        /* Force left align */
         align-items: flex-start !important;
-        margin-bottom: 20px;
-        /* Requested 20px gap */
+        margin-bottom: 50px;
+        /* Distinct vertical gap */
         display: flex;
         flex-direction: column;
+        padding-left: 0;
+        /* Align with safe zone */
     }
 
     .work-intro h2 {
@@ -1396,8 +1421,13 @@ footer::before {
     .about-sidebar {
         width: 100%;
         text-align: center;
-        margin-bottom: 10px;
-        /* Requested 10px gap */
+        margin-bottom: 25px;
+        /* Exactly half of Work Intro (50px) */
+    }
+
+    .closing-statement .bold {
+        font-size: 90% !important;
+        /* 10% smaller */
     }
 
     .contact-header {
@@ -1413,7 +1443,8 @@ footer::before {
     }
 
     .about-text-block {
-        text-align: center;
+        text-align: left;
+        /* Better readability */
     }
 
 
@@ -1522,12 +1553,23 @@ footer::before {
         top: 2rem;
         right: 2rem;
         font-family: var(--font-primary);
-        font-size: 2rem;
+        font-size: 3rem;
+        /* Larger */
         color: #fff;
         cursor: pointer;
-        z-index: 160;
-        opacity: 0.8;
+        z-index: 1000;
+        /* High Z */
+        opacity: 1;
+        /* Fully visible */
         transition: opacity 0.3s;
+        background: rgba(0, 0, 0, 0.5);
+        /* Optional accessibility */
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
     }
 
     .close-menu:hover {

@@ -108,6 +108,32 @@ const fragmentShaderSource = `
                                       dot(p2,x2), dot(p3,x3) ) );
     }
 
+    // OKLCH to Linear RGB conversion (Approximation)
+    // l: 0.0-1.0, c: 0.0-0.4+, h: 0.0-1.0 (0-360 degrees)
+    vec3 oklch_to_rgb(vec3 c) {
+        float l = c.x;
+        float s = c.y;
+        float h = c.z * 6.283185307; // 0-1 to radians
+
+        float a = s * cos(h);
+        float b = s * sin(h);
+
+        // OKLCH -> LMS
+        vec3 lms = vec3(l + 0.3963377774 * a + 0.2158037573 * b,
+                        l - 0.1055613458 * a - 0.0638541728 * b,
+                        l - 0.0894841775 * a - 1.2914855480 * b);
+
+        // LMS -> Linear RGB (approximate cubic transfer removal)
+        lms = lms * lms * lms;
+
+        // Linear RGB projection
+        return vec3(
+            4.0767416621 * lms.x - 3.3077115913 * lms.y + 0.2309699292 * lms.z,
+            -1.2684380046 * lms.x + 2.6097574011 * lms.y - 0.3413193965 * lms.z,
+            -0.0041960863 * lms.x - 0.7034186147 * lms.y + 1.7076147010 * lms.z
+        );
+    }
+
     void main() {
         vec2 uv = gl_FragCoord.xy / u_resolution.xy;
         
@@ -122,19 +148,26 @@ const fragmentShaderSource = `
         // Combined noise for organic flow
         float finalNoise = (n1 + n2 + n3) / 3.0;
         
-        // Color Palette (Red, Blue, Green)
-        vec3 c_base = vec3(0.0, 0.0, 0.0);       // Dark Base
-        vec3 c_red = vec3(0.9, 0.1, 0.1);        // Red
-        vec3 c_blue = vec3(0.1, 0.2, 0.9);       // Blue
-        vec3 c_green = vec3(0.1, 0.8, 0.2);      // Green
+        // Color Palette (Blue, Orange, White) using OKLCH
+        vec3 c_base = vec3(0.0, 0.0, 0.0);           // Dark Base
+        
+        // Blue: L=0.55, C=0.2, H=260/360=0.72
+        vec3 c_blue = oklch_to_rgb(vec3(0.55, 0.2, 0.72));
+        
+        // Orange: L=0.65, C=0.2, H=50/360=0.14  
+        vec3 c_orange = oklch_to_rgb(vec3(0.65, 0.2, 0.14));
+        
+        // White: L=0.95, C=0.0, H=0.0
+        vec3 c_white = oklch_to_rgb(vec3(0.95, 0.0, 0.0));
         
         // Mixing Logic: Very broad, smooth gradients (no sharp "puddles")
         vec3 color = c_base;
+
         
         // Mix using wide smoothsteps for painterly effect
-        color = mix(color, c_red, smoothstep(-0.8, 0.6, n1));
+        color = mix(color, c_orange, smoothstep(-0.8, 0.6, n1));
         color = mix(color, c_blue, smoothstep(-0.6, 0.8, n2));
-        color = mix(color, c_green, smoothstep(-0.5, 0.9, n3) * 0.6); // Reduced intensity to prevent overwhelming green
+        color = mix(color, c_white, smoothstep(-0.5, 0.9, n3) * 0.6); // Reduced intensity to prevent overwhelming white
         
         // Add subtle lightness variation
         color += (finalNoise * 0.1);
@@ -232,13 +265,13 @@ function introAnimation() {
         duration: 1.2,
         ease: "power4.inOut"
     })
-        .from(".hero-title .line", {
+        .from(".hero .hero-title .line", {
             opacity: 0,
             duration: 1,
             ease: "power2.out"
         }, "-=0.5")
         // Spin 'O' letters - adjusted to start immediately with title
-        .from(".spin-letter", {
+        .from(".hero .spin-letter", {
             rotation: -1440, // 4 full spins (faster)
             duration: 3,
             ease: "power4.out" // Smooth deceleration to 0
@@ -267,6 +300,26 @@ function introAnimation() {
             scrub: 1.5
         }
     });
+
+    // Logo Interactions (Click & Hover)
+    const logo = document.querySelector(".logo");
+    if (logo) {
+        // Scroll to top on click
+        logo.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        // Spin on hover
+        const logoLetters = logo.querySelectorAll(".spin-letter");
+        logo.addEventListener("mouseenter", () => {
+            gsap.to(logoLetters, {
+                rotation: "+=360",
+                duration: 0.8,
+                ease: "power2.out",
+                overwrite: true
+            });
+        });
+    }
 }
 
 
@@ -419,40 +472,39 @@ if (magneticBtn) {
 
 // Services Header - Keep it Rollin' Style Animation (Letter Spacing)
 // Services Header - Keep it Rollin' Style Animation (Letter Spacing)
-const servicesTitle = document.querySelector(".services-title");
-if (servicesTitle) {
-    // Reset content in case it was split previously
-    servicesTitle.innerHTML = servicesTitle.innerText;
-
-    gsap.fromTo(servicesTitle,
-        {
-            letterSpacing: "0px",
-            opacity: 0.5,
-            y: 20
-        },
-        {
-            letterSpacing: "24px",
-            autoRound: false, // Critical for smooth letter-spacing 
-            opacity: 1,
-            y: 0,
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".services-header",
-                start: "top 85%",
-                end: "bottom center",
-                scrub: 1 // Reduced scrub slightly for responsiveness, but smoothness comes from autoRound
-            }
+// Services Header - Hero Style Animation
+const servicesHeader = document.querySelector(".services-header");
+if (servicesHeader) {
+    const tlServices = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".services-header",
+            start: "top 80%", // Trigger earlier
+            toggleActions: "play none none reverse"
         }
-    );
+    });
+
+    // Animation 1 (The Reveal)
+    tlServices.from(".services .hero-title .line", {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out"
+    })
+        // Animation 2 (The Spin) - Synced with Reveal
+        .from(".services .hero-title .spin-letter", {
+            rotation: -1440,
+            duration: 3,
+            ease: "power4.out"
+        }, "<");
 }
 
-// Cards Stagger Reveal
+// Cards Stagger Reveal - Optimized for Stability
 gsap.from(".service-card", {
-    y: 100,
+    y: 50, // Reduced distance
     opacity: 0,
-    duration: 1,
-    stagger: 0.2,
+    duration: 0.8,
+    stagger: 0.1, // Faster stagger
     ease: "power2.out",
+    clearProps: "all", // CRITICAL: Removes transform after animation to prevent offsets
     scrollTrigger: {
         trigger: ".services-grid",
         start: "top 85%"
@@ -473,17 +525,17 @@ serviceCards.forEach(card => {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        // Tilt calculation
-        const rotateX = ((y - centerY) / centerY) * -5; // Max 5deg
-        const rotateY = ((x - centerX) / centerX) * 5;
+        // Tilt calculation (Subtler: Reduced multiplier from 5 to 2)
+        const rotateX = ((y - centerY) / centerY) * -2;
+        const rotateY = ((x - centerX) / centerX) * 2;
 
-        // Apply rotation
+        // Apply rotation (Smoother: Increased duration slightly, using power2.out)
         gsap.to(card, {
             rotationX: rotateX,
             rotationY: rotateY,
             transformPerspective: 1000,
-            duration: 0.5,
-            ease: "power1.out"
+            duration: 0.8,
+            ease: "power2.out"
         });
 
         // Move glass shimmer effect

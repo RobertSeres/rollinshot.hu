@@ -1276,10 +1276,18 @@ footer::before {
     /* 1. FIX TITLE SIZING (Prevent Breaking) */
     .hero-title {
         font-size: 15vw;
-        /* User asked for .bg-text-decoration to be 15vw */
         line-height: 1;
         flex-direction: column;
         word-break: break-word;
+    }
+
+    .bg-text-decoration {
+        font-size: 12vw;
+        line-height: 0.9;
+        width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
     }
 
     .sticky-title {
@@ -1303,10 +1311,9 @@ footer::before {
     }
 
     .services-header .hero-title {
-        font-size: 11vw;
-        /* Requested 11vw */
+        font-size: 8vw;
+        /* Reduced to 8vw to keep on one line */
         white-space: nowrap;
-        /* Requested nowrap */
     }
 
     /* Nav */
@@ -1344,10 +1351,10 @@ footer::before {
     .work-intro h2 {
         font-size: 10vw;
         text-align: left;
-        /* Ensure h2 is left aligned */
         justify-content: flex-start;
-        /* Override centering flex */
         width: 100%;
+        margin-left: 0;
+        margin-right: 0;
     }
 
     .work-intro p {

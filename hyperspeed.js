@@ -429,7 +429,20 @@ class App {
         this.init = this.init.bind(this);
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
+        this.paused = false; // Add paused state
         window.addEventListener('resize', this.onWindowResize.bind(this));
+    }
+    // Add control methods
+    play() {
+        if (this.paused) {
+            this.paused = false;
+            this.clock.start(); // Resume clock
+            this.tick();
+        }
+    }
+    pause() {
+        this.paused = true;
+        this.clock.stop(); // Stop clock to prevent large delta jump
     }
     onWindowResize() {
         const width = this.container.offsetWidth;
@@ -513,6 +526,7 @@ class App {
     }
     render(delta) { this.composer.render(delta); }
     tick() {
+        if (this.paused) return; // Stop loop if paused
         const delta = this.clock.getDelta();
         this.render(delta);
         this.update(delta);
@@ -529,6 +543,7 @@ try {
     options.distortion = distortions[options.distortion];
 
     const myApp = new App(container, options);
+    window.hyperspeedApp = myApp; // Expose instance globally
     myApp.loadAssets().then(myApp.init).catch(err => {
         console.error(err);
         const errEl = document.getElementById('error-msg');

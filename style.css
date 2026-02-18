@@ -163,6 +163,9 @@ nav {
 /* Hero Section */
 .hero {
     height: 100vh;
+    /* Ensure full viewport height */
+    min-height: 100vh;
+    /* Fallback */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -775,10 +778,27 @@ footer::before {
     /* Increased top padding */
     position: relative;
     z-index: 10;
+    /* background: transparent; - Removed to allow canvas behind */
     background: transparent;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 3rem;
+    overflow: hidden;
+    /* Contain the canvas */
+}
+
+#services-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* Behind content */
+    opacity: 0.5;
+    /* Slight transparency */
+    pointer-events: none;
     margin-bottom: 3rem;
 }
 

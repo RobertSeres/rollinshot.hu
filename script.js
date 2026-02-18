@@ -109,6 +109,17 @@ function introAnimation() {
 
 
 // About Section - Premium Redesign Animations
+// Control Hyperspeed Background (#lights) visibility
+// Only visible in Hero section
+ScrollTrigger.create({
+    trigger: ".hero",
+    start: "top top", // When hero starts
+    end: "bottom top", // When hero ends
+    onLeave: () => gsap.to("#lights", { opacity: 0, duration: 0.5 }), // Fade out when leaving
+    onEnterBack: () => gsap.to("#lights", { opacity: 1, duration: 0.5 }), // Fade in when coming back
+    onEnter: () => gsap.to("#lights", { opacity: 1, duration: 0.5 }) // Ensure visible on load if at top
+});
+
 // About Section - Premium Redesign Animations
 // 1. Sticky Title Dynamics (Fade + Skew on scroll)
 gsap.to(".sticky-title", {

@@ -57,12 +57,12 @@ const options = {
     colors: {
         roadColor: 0x080808,
         islandColor: 0x0a0a0a,
-        background: 0x000000,
-        shoulderLines: 0x131318,
-        brokenLines: 0x131318,
-        leftCars: [0xff102a, 0xeb383e, 0xff102a],
-        rightCars: [0xdadafa, 0xbebae3, 0x8f97e4],
-        sticks: 0xdadafa
+        background: 0x0C0516,
+        shoulderLines: 0xffffff,
+        brokenLines: 0xffffff,
+        leftCars: [0xFF102A, 0xFF5F00, 0xFFD700],
+        rightCars: [0x334BF7, 0x03B3C3, 0xFFFFFF],
+        sticks: 0x03B3C3
     }
 };
 

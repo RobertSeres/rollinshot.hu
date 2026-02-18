@@ -22,7 +22,21 @@
 <body>
 
     <!-- WebGL Background -->
-    <canvas id="gl-canvas"></canvas>
+    <!-- Hyperspeed Background -->
+    <div id="error-msg"
+        style="display: none; color: red; background: rgba(0,0,0,0.8); padding: 10px; position: absolute; top: 10px; left: 10px; z-index: 9999;">
+    </div>
+    <div id="lights"></div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://esm.sh/three@0.160.0",
+                "postprocessing": "https://esm.sh/postprocessing@6.34.0?external=three"
+            }
+        }
+    </script>
+    <script type="module" src="hyperspeed.js"></script>
 
     <!-- Preloader -->
     <div class="preloader">

@@ -1,10 +1,8 @@
 :root {
     --text-color: #ffffff;
     --accent-color: #ccff00;
-    /* Neon lime/yellow hint */
     --font-primary: 'Clash Display', sans-serif;
     --font-secondary: 'SN Pro', 'Nunito', sans-serif;
-    /* New SN Pro Font */
     --card-bg: rgba(255, 255, 255, 0.05);
     --border-color: rgba(255, 255, 255, 0.1);
 }
@@ -15,29 +13,44 @@
     box-sizing: border-box;
 }
 
+html {
+    background-color: #000;
+    /* A legalsó réteg legyen fekete */
+}
+
 body {
-    background-color: #050505;
-    /* Fallback */
+    background-color: transparent;
+    /* FONTOS: Átlátszónak kell lennie, hogy lássuk a mögötte lévő canvas-t */
     color: var(--text-color);
     font-family: var(--font-secondary);
     overflow-x: hidden;
-    /* Hide scrollbar for x axis */
     width: 100%;
+    position: relative;
+    /* Ez fontos a rétegzéshez */
+    z-index: 2;
+    /* A tartalom legyen az animáció fölött */
 }
 
-html {
-    overflow-x: hidden;
-}
-
-/* WebGL Canvas */
-#gl-canvas {
+/* WebGL Canvas beállítása */
+#lights {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: -1;
+    z-index: 0;
+    /* -1 helyett 0, így biztosan látszik, de a body (z-index: 2) alatt van */
+    background-color: #000;
     pointer-events: none;
+    /* Átkattintható legyen */
+}
+
+/* FONTOS: A fő tartalomnak relatívnak kell lennie, hogy a z-index működjön */
+main,
+nav,
+.hero {
+    position: relative;
+    z-index: 10;
 }
 
 /* Typography */
